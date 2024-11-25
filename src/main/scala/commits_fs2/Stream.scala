@@ -1,4 +1,4 @@
-package commits 
+package commits_fs2
 
 import cats.effect.Async
 import cats.effect.IO

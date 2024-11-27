@@ -7,6 +7,10 @@ import zio.json._, ast._
 
 object Commits:
 
+  object IsArray: 
+      def unapply(json: Json): Option[Chunk[Json]] = 
+          json.asArray
+          
   def from(repo: String, token: String): ZStream[Client, Throwable, Json] =
 
     def newPage(i: Int): ZStream[Client, Throwable, Json] = 
@@ -15,9 +19,9 @@ object Commits:
             .map(_.fromJson[Json])
             .collectRight
     
-    def go(s: ZStream[Client, Throwable, Json], next: Int): ZStream[Client, Throwable, Json] =
-        s.flatMap: page => 
-            if page.asArray.map(_.isEmpty).getOrElse(true) then ZStream.empty
-            else ZStream(page) ++ go(newPage(next), next + 1)
+    def go(page: ZStream[Client, Throwable, Json], next: Int): ZStream[Client, Throwable, Json] =
+        page.flatMap: 
+            case IsArray(Chunk()) => ZStream.empty
+            case _ => page ++ go(newPage(next), next + 1)
 
-    go(newPage(0), 1)
+    go(newPage(1), 2)

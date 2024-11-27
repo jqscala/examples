@@ -14,13 +14,13 @@ import jq._, jqfs2.given
         System.exit(1)
     }{ token =>
         given LoggerFactory[IO] = Slf4jFactory.create[IO]
-        val repo: String = "https://api.github.com/repos/jserranohidalgo/urjc-gia-pd"
+        val repo: String = "https://api.github.com/repos/jserranohidalgo/urjc-pd"
         
         val commits: List[Json | TypeError] = 
             Commits.from[IO](repo, token)
-                .take(2)
-                .through(iterator | arr(i"author.login", i"commit.message"))
+                //.take(2)
+                .through(iterator | arr(i"author.login", i"commit.message", i"commit.author.date"))
                 .run
         
-        println(commits)
+        commits.foreach(println)
     }

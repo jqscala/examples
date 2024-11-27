@@ -22,4 +22,4 @@ object Commits:
                     case _ => Pull.output(hd) >> go(i+1, tl ++ newPage(i))
             case None => Pull.done
 
-    go(1, newPage(0)).stream
+    go(2, newPage(1)).stream

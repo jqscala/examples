@@ -5,7 +5,7 @@ import fs2.Pull
 import fs2.Stream
 import io.circe.Json
 import org.typelevel.log4cats.LoggerFactory
-import jq.IsArray
+import jq.std.IsArray
 
 object Commits:
 

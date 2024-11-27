@@ -5,8 +5,8 @@ import zio.stream._
 import zio.json._
 import zio.json.ast._, JsonCursor._
 import zio.http._
-import jq._
-import jqzio._, jqzio.JQZioJZ
+import jq.{Json => _, _}
+import jqzio._, jqzio.given
 
 object Main extends ZIOAppDefault:
 
@@ -21,7 +21,7 @@ object Main extends ZIOAppDefault:
                 yield Json.Arr(login, msg)
             .collectRight
 
-    def infoWithJq[R, E]: ZPipeline[R, E, Json, Json | jqzio.TypeError] = 
+    def infoWithJq[R, E]: ZPipeline[R, E, Json, Json | TypeError[Json]] = 
         iterator | arr(i"author.login", i"commit.message", i"commit.author.date")
 
     override val run = 

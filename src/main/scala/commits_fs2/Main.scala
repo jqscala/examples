@@ -16,7 +16,7 @@ import jq._, jqfs2.given
         given LoggerFactory[IO] = Slf4jFactory.create[IO]
         val repo: String = "https://api.github.com/repos/jserranohidalgo/urjc-pd"
         
-        val commits: List[Json | TypeError] = 
+        val commits: List[Json | TypeError[Json]] = 
             Commits.from[IO](repo, token)
                 //.take(2)
                 .through(iterator | arr(i"author.login", i"commit.message", i"commit.author.date"))

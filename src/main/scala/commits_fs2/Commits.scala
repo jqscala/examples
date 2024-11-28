@@ -13,13 +13,11 @@ object Commits:
 
     def newPage(i: Int): Stream[F, Json] = 
         Stream.fromUri(org.http4s.Uri.unsafeFromString(s"$repo/commits?page=$i"), token)
+            .evalTap(_ => Async[F].delay(println(s"page $i")))
     
-    def go(i: Int, s: Stream[F,Json]): Pull[F, Json, Unit] =
-        s.pull.uncons.flatMap:
-            case Some((hd,tl)) =>
-                hd(0) match
-                    case IsArray(Vector()) => Pull.done
-                    case _ => Pull.output(hd) >> go(i+1, tl ++ newPage(i))
-            case None => Pull.done
-
-    go(2, newPage(1)).stream
+    def loop(next: Int): Stream[F, Json] =
+        newPage(next) flatMap: 
+            case IsArray(Vector()) => Stream.empty
+            case array => Stream(array) ++ loop(next + 1)
+            
+    loop(1)

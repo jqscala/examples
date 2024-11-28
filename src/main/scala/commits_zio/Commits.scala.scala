@@ -18,10 +18,11 @@ object Commits:
             .mapZIO(_.body.asString)
             .map(_.fromJson[Json])
             .collectRight
+            .tap(_ => zio.Console.printLine(s"page: $i"))
     
-    def go(page: ZStream[Client, Throwable, Json], next: Int): ZStream[Client, Throwable, Json] =
-        page.flatMap: 
+    def loop(next: Int): ZStream[Client, Throwable, Json] =
+        newPage(next) flatMap: 
             case IsArray(Chunk()) => ZStream.empty
-            case _ => page ++ go(newPage(next), next + 1)
-
-    go(newPage(1), 2)
+            case array => ZStream(array) ++ loop(next + 1)
+            
+    loop(1)

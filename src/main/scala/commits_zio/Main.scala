@@ -22,7 +22,7 @@ object Main extends ZIOAppDefault:
             .collectRight
 
     def infoWithJq[R, E]: ZPipeline[R, E, Json, Json | TypeError[Json]] = 
-        iterator | arr(i"author.login", i"commit.message", i"commit.author.date")
+        iterator | arr(i"author.login", i"commit.author.date")
 
     override val run = 
         // https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api?apiVersion=2022-11-28
@@ -32,8 +32,9 @@ object Main extends ZIOAppDefault:
                 ZIO.succeed(1)
             case Some(token) => 
                 ZIO.scoped:
-                    Commits.from("https://api.github.com/repos/jserranohidalgo/urjc-pd",token)
+                    //Commits.from("https://api.github.com/repos/jserranohidalgo/urjc-pd",token)
+                    Commits.from("https://api.github.com/repos/hablapps/doric",token)
                         .via(infoWithJq)
-                        //.take(10)
+                        .take(70) // retrieve 3 pages
                         .foreach(Console.printLine(_))
                 .provide(ZClient.default)

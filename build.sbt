@@ -1,11 +1,12 @@
-val scala3Version = "3.4.0"
-val jqfs2Version = "0.1.0-SNAPSHOT"
+val scala3Version = "3.3.0"
+val jqfs2Version = "0.1.0-DECOUPLING"
+val jqzioVersion = "0.1.0-DECOUPLING"
 
 lazy val root = project
   .in(file("."))
   .settings(
     name := "jq-examples",
-    version := "0.1.0-SNAPSHOT",
+    version := "0.1.0-DECOUPLING",
 
     scalaVersion := scala3Version,
 
@@ -20,7 +21,11 @@ lazy val root = project
       "org.slf4j" % "slf4j-nop" % "2.0.9",
       "io.circe" %% "circe-optics" % "0.15.0",
       "dev.optics" %% "monocle-macro" % "3.2.0",
-      "jqscala" %% "jq-fs2" % jqfs2Version
-    )
-      
+      "jqscala" %% "jq-fs2" % jqfs2Version,
+      "jqscala" %% "jq-zio" % jqzioVersion,
+      "dev.zio" %% "zio" % "2.1.11",
+      "dev.zio" %% "zio-streams" % "2.1.11",
+      "dev.zio" %% "zio-http" % "3.0.1",
+      "dev.zio" %% "zio-json" % "0.7.3"
+    ) 
   )
